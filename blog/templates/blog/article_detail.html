@@ -1,0 +1,32 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<a href="{% url 'index' %}">Retour à la liste des articles</a>
+<h1>{{ article.title }}</h1>
+<p>Publié le : {{ article.published_at}}</p>
+<img class="w-100 article-cover" src="{{article.cover.url}}" alt="">
+<p>{{ article.show_desc }}</p>
+<p>{{ article.content }}</p>
+
+<div class="container mt-5 mb-5">
+	<div class="row">
+		<div class="col-md-12">
+            <h2>Commentaire(s)</h2>
+            <form action="{% url 'comment-create' %}" method="post">
+            {% csrf_token %}
+            {{comment_form.as_p}}
+            <button type="submit">Commenter</button>
+            </form>
+			<ul class="timeline">
+                {% for comment in article.comment_set.all %}
+				<li>
+					<p>{{comment.date}} - {{comment.full_name}} - {{comment.email}}</p>
+					<p>{{comment.message}}</p>
+				</li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

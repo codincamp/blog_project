@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css' %}">
+    <link rel="stylesheet" href="{% static '@fortawesome/fontawesome-free/css/all.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+    {% include "blog/header.html" %}
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-md-8">
+          {% block content%} {% endblock %}
+        </div>
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+            <!-- Search Widget -->
+            <div class="card my-4">
+              <h5 class="card-header">Recherche</h5>
+              <div class="card-body">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Recherche ...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="button">Go!</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Categories Widget -->
+            <div class="card my-4">
+              <h5 class="card-header">Par catégories</h5>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <ul class="list-unstyled mb-0">
+                      {% for category in categories %}
+                      <li>
+                        <a href="{% url 'category' category.slug %}">{{category.label }}</a>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Side Widget -->
+            <div class="card my-4">
+              <h5 class="card-header">Par date de parutions</h5>
+              <div class="card-body">
+                      <div id="datepicker"></div>
+                      <input type="hidden" id="datepicker_input">
+              </div>
+            </div>
+  
+        </div>
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+    {% include "blog/footer.html" %}
+
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#datepicker').datepicker({
+                language : "fr",
+            });
+            $('#datepicker').on('changeDate', function() {
+                $('#datepicker_input').val(
+                    $('#datepicker').datepicker('getFormattedDate')
+                );
+            });
+        })
+    </script>
+</body>
+</html>
