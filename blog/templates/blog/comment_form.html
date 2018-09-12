@@ -3,8 +3,25 @@
 {% block content %}
 
 <form action="." method="post">
- {% csrf_token %}
-{{form.as_p}}
+    {% csrf_token %}
+    <div class="form-group row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">Nom complet</label>
+        <div class="col-sm-9">
+            {{form.full_name}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword" class="col-sm-3 col-form-label">Email</label>
+        <div class="col-sm-9">
+            {{form.email}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Message</label>
+        {{form.message}}
+    </div>
+    {{form.parent.as_hidden}}
+    {{form.article.as_hidden}}
 <button type="summit">Commenter</button>
 </form>
 

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css' %}">
     <link rel="stylesheet" href="{% static '@fortawesome/fontawesome-free/css/all.min.css'%}">
+    <link rel="stylesheet" href="{% static 'flatpickr/dist/flatpickr.min.css'%}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -25,19 +26,35 @@
         <div class="col-md-8">
           {% block content%} {% endblock %}
         </div>
-        <!-- Sidebar Widgets Column -->
         <div class="col-md-4">
-
+        {% if request.user.is_authenticated %}
+            <div class="card my-4">
+              <h5 class="card-header">Admin</h5>
+              <div class="card-body">
+                <ul class="list-unstyled">
+                  <li>
+                    <a href="{% url 'article-create'%}">
+                      <i class="fas fa-plus-square"></i>
+                      Créer un nouvel article</a>
+                  </li>
+                  {% block extra_admin_action %}
+                  {% endblock extra_admin_action %}
+                </ul>
+              </div>
+            </div>
+            {% endif %}
             <!-- Search Widget -->
             <div class="card my-4">
               <h5 class="card-header">Recherche</h5>
               <div class="card-body">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Recherche ...">
-                  <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="button">Go!</button>
-                  </span>
-                </div>
+                <form action="{% url 'index' %}" method="get">
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="q" placeholder="Recherche ...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-secondary" type="submit">Go!</button>
+                    </span>
+                  </div>
+                </form>
               </div>
             </div>
   
@@ -63,8 +80,10 @@
             <div class="card my-4">
               <h5 class="card-header">Par date de parutions</h5>
               <div class="card-body">
-                      <div id="datepicker"></div>
-                      <input type="hidden" id="datepicker_input">
+                  <form id="search_date_form" action="{% url 'index' %}" method="get">
+                    <div id="datepicker"></div>
+                    <input type="hidden" id="datepicker_input" name="date">
+                  </form>
               </div>
             </div>
   
@@ -81,16 +100,27 @@
     <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js' %}"></script>
+    <script src="{% static 'flatpickr/dist/flatpickr.min.js' %}"></script>
+    <script src="{% static 'slugify/index.js' %}"></script>
     <script>
         $(document).ready(function(){
             $('#datepicker').datepicker({
                 language : "fr",
             });
             $('#datepicker').on('changeDate', function() {
-                $('#datepicker_input').val(
-                    $('#datepicker').datepicker('getFormattedDate')
-                );
+                var formatted_date = $('#datepicker').datepicker('getFormattedDate')
+                $('#datepicker_input').val(formatted_date);
+                $("#search_date_form").submit();
             });
+            $("#id_published_at").flatpickr({
+              enableTime: true,
+              dateFormat: "Y-m-d H:i",
+            });
+            $("#id_title").on('keyup', function(){
+              var title = $(this).val();
+              $("#id_slug").val(slugify(title));
+            })
+           
         })
     </script>
 </body>

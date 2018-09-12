@@ -1,8 +1,20 @@
 {% extends "blog/base.html" %}
 
+{% block extra_admin_action %}
+<li>
+	<a href="{% url 'article-update' article.slug %}" >
+		<i class="fas fa-edit"></i> Éditer cette article
+	</a>
+</li>
+{% endblock extra_admin_action %}
+
 {% block content %}
-<a href="{% url 'index' %}">Retour à la liste des articles</a>
-<h1>{{ article.title }}</h1>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'index' %}">Retour à la liste des articles</a></li>
+  </ol>
+</nav>
+<h1><span class="badge badge-pill badge-primary">{{article.category}}</span> {{ article.title }}</h1>
 <p>Publié le : {{ article.published_at}}</p>
 <img class="w-100 article-cover" src="{{article.cover.url}}" alt="">
 <p>{{ article.show_desc }}</p>
@@ -14,7 +26,24 @@
             <h2>Commentaire(s)</h2>
             <form action="{% url 'comment-create' %}" method="post">
             {% csrf_token %}
-            {{comment_form.as_p}}
+				{{comment_form.parent.as_hidden}}
+				{{comment_form.article.as_hidden}}
+				<div class="form-group row">
+					<label for="staticEmail" class="col-sm-3 col-form-label">Nom complet</label>
+					<div class="col-sm-9">
+						{{comment_form.full_name}}
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="inputPassword" class="col-sm-3 col-form-label">Email</label>
+					<div class="col-sm-9">
+						{{comment_form.email}}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inputPassword">Message</label>
+					{{comment_form.message}}
+				</div>
             <button type="submit">Commenter</button>
             </form>
 			<ul class="timeline">

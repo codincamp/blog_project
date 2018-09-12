@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django_extensions',
+    'bootstrap4',
     'blog',
 ]
 
@@ -127,3 +128,6 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "node_modules"),
 ]
+
+LOGIN_URL = "/login"
+LOGOUT_URL = "/logout"
